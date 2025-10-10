@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - backend_data:/app/data  # Assumes data is stored here for persistence
+
+volumes:
+  backend_data:
