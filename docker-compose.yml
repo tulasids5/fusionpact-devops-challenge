@@ -1,21 +1,16 @@
-version: "3.8"
+version: '3.8'
 
 services:
   frontend:
-    build:
-      context: ./frontend
+    build: ./frontend
+    container_name: fusionpact-frontend
     ports:
-      - "80:80"
-    depends_on:
-      - backend
+      - "8080:80"
 
   backend:
-    build:
-      context: ./backend
+    build: ./backend
+    container_name: fusionpact-backend
     ports:
       - "8000:8000"
     volumes:
-      - backend_data:/app/data  # Assumes data is stored here for persistence
-
-volumes:
-  backend_data:
+      - ./backend/data:/app/data

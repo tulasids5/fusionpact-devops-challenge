@@ -1,8 +1,0 @@
-# Base image
-FROM nginx:alpine
-
-# Copy static files into nginx directory
-COPY . /usr/share/nginx/html
-
-# Expose port
-EXPOSE 80
