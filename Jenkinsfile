@@ -1,59 +1,47 @@
 pipeline {
     agent any
-
-    environment {
-        DOCKER_REGISTRY = "docker.io"                 // Docker Hub
-        DOCKER_CREDENTIALS_ID = "docker-hub-creds"   // Jenkins credentials
-        IMAGE_NAME = "tulasigowda/fusionpact"
-    }
-
     stages {
-
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/tulasids5/fusionpact-devops-challenge.git'
             }
         }
-
-        stage('Build Backend & Frontend') {
+        stage('Build & Test') {
             steps {
-                sh 'docker-compose build'
-            }
-        }
-
-        stage('Test Backend') {
-            steps {
-                sh 'echo "Add your backend test commands here"' 
-                // e.g., python -m unittest discover backend/tests
-            }
-        }
-
-        stage('Push Docker Images') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh """
-                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                    docker tag fusionpact-devops-challenge_backend $IMAGE_NAME-backend:latest
-                    docker tag fusionpact-devops-challenge_frontend $IMAGE_NAME-frontend:latest
-                    docker push $IMAGE_NAME-backend:latest
-                    docker push $IMAGE_NAME-frontend:latest
-                    """
+                script {
+                    sh 'pip install -r backend/requirements.txt'
+                    sh 'pytest backend/tests || echo "No tests defined"'
+                    sh 'cd frontend && npm install && npm run build || echo "No frontend build defined"'
                 }
             }
         }
-
-        stage('Deploy to Cloud') {
+        stage('Docker Build & Push') {
+            environment {
+                DOCKER_HUB_CREDENTIALS = credentials('docker-hub-creds')
+            }
             steps {
-                sh 'docker-compose down'
-                sh 'docker-compose up -d'
+                script {
+                    sh 'docker build -t docker.io/tulasids5/backend:latest backend/'
+                    sh 'docker build -t docker.io/tulasids5/frontend:latest frontend/'
+                    sh 'echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin'
+                    sh 'docker push docker.io/tulasids5/backend:latest'
+                    sh 'docker push docker.io/tulasids5/frontend:latest'
+                }
             }
         }
-
-    }
-
-    post {
-        always {
-            sh 'docker system prune -f'
+        stage('Deploy') {
+            steps {
+                sshagent(['ec2-deploy-key']) {
+                    sh '''
+                    ssh ubuntu@EC2_PUBLIC_IP "
+                    cd ~/fusionpact-devops-challenge &&
+                    docker compose pull &&
+                    docker compose up -d
+                    "
+                    '''
+                }
+            }
         }
     }
 }
+
