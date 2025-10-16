@@ -50,8 +50,8 @@ pipeline {
                         fi
                         cd ~/fusionpact-devops-challenge
                         git pull
-                        docker-compose pull
-                        docker-compose up -d --remove-orphans
+                        docker compose pull
+                        docker compose up -d --remove-orphans
                     ENDSSH
                     """
                 }
