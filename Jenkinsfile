@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKERHUB_CREDENTIALS = credentials('docker-hub-creds')
-        DEPLOY_SERVER = 'ubuntu@13.233.2.10'
+        DEPLOY_SERVER = 'ubuntu@13.203.227.100'
         SSH_KEY_ID = 'ec2-deploy-key'
         BACKEND_IMAGE = 'docker.io/tulasids5/backend:latest'
         FRONTEND_IMAGE = 'docker.io/tulasids5/frontend:latest'
@@ -18,7 +18,7 @@ pipeline {
         stage('Build & Test') {
             steps {
                 sh '''
-                pip install -r backend/requirements.txt
+                pip install --user -r backend/requirements.txt
                 pytest backend/tests || echo "No tests defined"
                 cd frontend && npm install && npm run build || echo "No frontend build defined"
                 '''
