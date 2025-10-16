@@ -44,7 +44,7 @@ pipeline {
             steps {
                 sshagent([SSH_KEY_ID]) {
                     sh """
-                    ssh -o StrictHostKeyChecking=no $DEPLOY_SERVER << 'ENDSSH'
+                    ssh -o StrictHostKeyChecking=no $DEPLOY_SERVER << 'EOF'
                         if [ ! -d ~/fusionpact-devops-challenge ]; then
                             git clone https://github.com/tulasids5/fusionpact-devops-challenge.git ~/fusionpact-devops-challenge
                         fi
