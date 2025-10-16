@@ -49,10 +49,12 @@ pipeline {
                             git clone https://github.com/tulasids5/fusionpact-devops-challenge.git ~/fusionpact-devops-challenge
                         fi
                         cd ~/fusionpact-devops-challenge
-                        git pull
-                        docker compose pull
-                        docker compose up -d --remove-orphans
-                    ENDSSH
+                        git pull origin main
+                        docker compose down
+                        docker compose build
+                        docker compose up -d 
+                        EOF
+                    
                     """
                 }
             }
