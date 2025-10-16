@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('docker-hub-creds')
-        DEPLOY_SERVER = 'ubuntu@13.203.227.100'
+        DEPLOY_SERVER = 'ubuntu@13.127.32.30'
         SSH_KEY_ID = 'ec2-deploy-key'
         BACKEND_IMAGE = 'docker.io/tulasigowda/backend:latest'
         FRONTEND_IMAGE = 'docker.io/tulasigowda/frontend:latest'
