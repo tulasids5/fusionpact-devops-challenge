@@ -6,6 +6,7 @@ metadata:
   description: An example of a Backstage application.
   annotations:
     github.com/project-slug: tulasids/fusionpact-devops-challenge
+    backstage.io/techdocs-ref: dir:.
   # Example for optional annotations
   # annotations:
   #   github.com/project-slug: backstage/backstage
