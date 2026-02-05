@@ -2,8 +2,8 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: taomish
-  title: Taomish Backstage
-  description: An example of a Backstage application.
+  title: Fusionpact
+  description: An example of a Fusionpact application.
   annotations:
     github.com/project-slug: tulasids/fusionpact-devops-challenge
     backstage.io/techdocs-ref: dir:.
